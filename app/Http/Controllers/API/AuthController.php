@@ -8,6 +8,7 @@ use App\Http\Requests\API\RegisterUserRequest;
 use App\Models\User;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -46,6 +47,7 @@ class AuthController extends Controller
     }
 
     public function logout() {
-        return 'Hello logout';
+        Auth::user()->tokens()->delete();
+        return $this->successResponse('Logged out successfully');
     }
 }
