@@ -28,7 +28,7 @@ class StoreEmployeeRequest extends FormRequest
             'salary' =>['required', 'integer'],
             'gender' => ['required', 'integer', 'between:1,2'],
             'hired_date' => ['required', 'date'],
-            'job_id' => ['required', 'integer', 'exists:jobs,id'],
+            'job_id' => ['required', 'integer', 'exists:employee_jobs,id'],
             'manager_id' => ['nullable', 'integer', 'exists:employees,id'],
         ];
     }
