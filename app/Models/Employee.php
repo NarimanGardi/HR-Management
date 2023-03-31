@@ -19,4 +19,19 @@ class Employee extends Model
         'job_id',
         'manager_id',
     ];
+
+    public function job()
+    {
+        return $this->belongsTo(Jobs::class);
+    }
+
+    public function manager()
+    {  
+        return $this->belongsTo(Employee::class, 'manager_id');
+    }
+
+    public function isFounder()
+    {
+        return is_null($this->manager_id);
+    }
 }
