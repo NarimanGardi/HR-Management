@@ -22,6 +22,11 @@ class Employee extends Model
 
     public function job()
     {
-        return $this->belongsTo(Job::class);
+        return $this->belongsTo(Jobs::class);
+    }
+
+    public function manager()
+    {  
+        return $this->belongsTo(Employee::class, 'manager_id');
     }
 }

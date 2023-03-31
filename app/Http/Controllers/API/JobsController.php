@@ -53,6 +53,6 @@ class JobsController extends Controller
     public function destroy(Jobs $job)
     {
         $job->destroy($job->id);
-        return $this->successResponse('Job deleted successfully');
+        return response(null, 204);
     }
 }
