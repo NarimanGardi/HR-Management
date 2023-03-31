@@ -73,4 +73,23 @@ class EmployeeController extends Controller
         $employee->destroy($employee->id);
         return response(null, 204);
     }
+
+    /**
+     * Get all managers for employee
+     */
+
+    public function getManagers($id){
+        try{
+            $employee = Employee::with('manager')->find($id);
+            $managers = collect([$employee->name]);
+            while (!$employee->isFounder()) {
+                $managers->push($employee->manager->name);
+                $employee = $employee->manager;
+            }
+            return $managers->reverse();
+        }
+        catch(\Exception $e){
+            return $this->errorResponse('Something went wrong: ' .$e->getMessage(), 500);
+        }
+    }
 }
