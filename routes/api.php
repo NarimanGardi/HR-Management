@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\EmployeeController;
+use App\Http\Controllers\API\EmployeeLogController;
 use App\Http\Controllers\API\JobsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/employees/export', [EmployeeController::class, 'ExportEmployees']);
     Route::post('/employees/import', [EmployeeController::class, 'ImportEmployees']);
     Route::resource('employees', EmployeeController::class)->except(['create', 'edit']);
+    Route::get('/{date}/logs', [EmployeeLogController::class, 'getLogs']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
