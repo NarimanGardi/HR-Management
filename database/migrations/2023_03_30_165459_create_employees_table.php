@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('hired_date');
             $table->integer('salary');
             $table->integer('gender');
-            $table->foreignId('job_id')->constrained('jobs');
+            $table->foreignId('job_id')->constrained('employee_jobs');
             $table->foreignId('manager_id')->nullable()->constrained('employees');
             $table->timestamps();
         });

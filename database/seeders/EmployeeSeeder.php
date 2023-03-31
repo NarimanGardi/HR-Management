@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 
 class EmployeeSeeder extends Seeder
 {
+    use WithoutModelEvents;
     /**
      * Run the database seeds.
      */
