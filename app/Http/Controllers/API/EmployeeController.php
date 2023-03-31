@@ -75,7 +75,7 @@ class EmployeeController extends Controller
     }
 
     /**
-     * Get all managers for employee
+     * Get all managers for specific employee
      */
 
     public function getManagers($id){
@@ -92,4 +92,27 @@ class EmployeeController extends Controller
             return $this->errorResponse('Something went wrong: ' .$e->getMessage(), 500);
         }
     }
+
+    /**
+     * Get all managers salary for specific employee
+     */
+
+     public function getManagerSalary($id){
+        try{
+            $employee = Employee::with('manager')->find($id);
+            $managers = collect([$employee]);
+            while (!$employee->isFounder()) {
+                $managers->push($employee->manager);
+                $employee = $employee->manager;
+            }
+            $result = [];
+            foreach ($managers->reverse() as $manager) {
+                $result[$manager->name] = $manager->salary;
+            }
+            return $result;
+        }
+        catch(\Exception $e){
+            return $this->errorResponse('Something went wrong: ' .$e->getMessage(), 500);
+        }
+     }
 }

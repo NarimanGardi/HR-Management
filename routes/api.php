@@ -23,6 +23,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     });
     Route::resource('jobs', JobsController::class)->except(['create', 'edit']);
     Route::get('/employees/{id}/managers', [EmployeeController::class, 'getManagers']);
+    Route::get('/employees/{id}/managers-salary', [EmployeeController::class, 'getManagerSalary']);
     Route::resource('employees', EmployeeController::class)->except(['create', 'edit']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
