@@ -25,7 +25,7 @@ class UpdateEmployeeRequest extends FormRequest
             'salary' =>['sometimes', 'integer'],
             'gender' => ['sometimes', 'integer', 'between:1,2'],
             'hired_date' => ['sometimes', 'date'],
-            'job_id' => ['sometimes', 'integer', 'exists:jobs,id'],
+            'job_id' => ['sometimes', 'integer', 'exists:employee_jobs,id'],
             'manager_id' => ['integer', 'exists:employees,id' , 'nullable']
         ];
     }

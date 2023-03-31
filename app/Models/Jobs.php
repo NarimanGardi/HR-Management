@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Jobs extends Model
 {
+    protected $table = 'employee_jobs';
     use HasFactory;
 
     protected $fillable = [

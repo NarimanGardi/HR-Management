@@ -27,6 +27,9 @@ class JobsController extends Controller
     public function store(StoreJobRequest $request)
     {
         $job = Jobs::create($request->validated());
+        if(!$job){
+            return $this->errorResponse('Something went wrong', 500);
+        }
         return new JobResource($job);
     }
 
