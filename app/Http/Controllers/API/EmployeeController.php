@@ -115,4 +115,14 @@ class EmployeeController extends Controller
             return $this->errorResponse('Something went wrong: ' .$e->getMessage(), 500);
         }
      }
+
+        /**
+        * Search employees by name
+        */
+    
+        public function SearchEmployees(Request $request){
+            $q = $request->input('q');
+            $employees = Employee::nameContains($q)->get();
+            return EmployeeCollectionResource::collection($employees);
+        }
 }
