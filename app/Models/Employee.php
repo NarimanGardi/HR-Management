@@ -34,4 +34,9 @@ class Employee extends Model
     {
         return is_null($this->manager_id);
     }
+
+    public function scopeNameContains($query, $substr)
+    {
+        return $query->where('name', 'LIKE', '%'.$substr.'%');
+    }
 }
