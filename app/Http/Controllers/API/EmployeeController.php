@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Events\SalaryChanged;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Employee\StoreEmployeeRequest;
 use App\Http\Requests\API\Employee\UpdateEmployeeRequest;
@@ -9,6 +10,7 @@ use App\Http\Resources\API\Employee\EmployeeCollectionResource;
 use App\Http\Resources\API\Employee\EmployeeResource;
 use App\Jobs\ImportEmployeesJob;
 use App\Models\Employee;
+use App\Notifications\SalaryChangedNotification;
 use Illuminate\Http\Request;
 use App\Traits\HttpResponses;
 use Illuminate\Support\Facades\Response;
@@ -58,9 +60,8 @@ class EmployeeController extends Controller
 
         $employee->update($request->validated());
 
-        // check if salary changed
         if ($employee->wasChanged('salary')) {
-            // send email to employee
+            $employee->notify(new SalaryChangedNotification($employee));
         }
 
         return new EmployeeResource($employee);
