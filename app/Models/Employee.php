@@ -29,4 +29,9 @@ class Employee extends Model
     {  
         return $this->belongsTo(Employee::class, 'manager_id');
     }
+
+    public function isFounder()
+    {
+        return is_null($this->manager_id);
+    }
 }
