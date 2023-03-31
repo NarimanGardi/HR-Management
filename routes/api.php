@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\EmployeeController;
 use App\Http\Controllers\API\JobsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         return $request->user();
     });
     Route::resource('jobs', JobsController::class)->except(['create', 'edit']);
+    Route::resource('employees', EmployeeController::class)->except(['create', 'edit']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
