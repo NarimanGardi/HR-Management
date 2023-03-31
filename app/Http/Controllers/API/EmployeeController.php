@@ -7,10 +7,11 @@ use App\Http\Requests\API\Employee\StoreEmployeeRequest;
 use App\Http\Requests\API\Employee\UpdateEmployeeRequest;
 use App\Http\Resources\API\Employee\EmployeeCollectionResource;
 use App\Http\Resources\API\Employee\EmployeeResource;
+use App\Jobs\ImportEmployeesJob;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Traits\HttpResponses;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Response;
 
 class EmployeeController extends Controller
 {
@@ -75,7 +76,7 @@ class EmployeeController extends Controller
     }
 
     /**
-     * Get all managers for employee
+     * Get all managers for specific employee
      */
 
     public function getManagers($id){
@@ -89,6 +90,82 @@ class EmployeeController extends Controller
             return $managers->reverse();
         }
         catch(\Exception $e){
+            return $this->errorResponse('Something went wrong: ' .$e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Get all managers salary for specific employee
+     */
+
+     public function getManagerSalary($id){
+        try{
+            $employee = Employee::with('manager')->find($id);
+            $managers = collect([$employee]);
+            while (!$employee->isFounder()) {
+                $managers->push($employee->manager);
+                $employee = $employee->manager;
+            }
+            $result = [];
+            foreach ($managers->reverse() as $manager) {
+                $result[$manager->name] = $manager->salary;
+            }
+            return $result;
+        }
+        catch(\Exception $e){
+            return $this->errorResponse('Something went wrong: ' .$e->getMessage(), 500);
+        }
+     }
+
+    /**
+    * Search employees by name
+    */
+    
+    public function SearchEmployees(Request $request){
+            $q = $request->input('q');
+            $employees = Employee::nameContains($q)->get();
+            return EmployeeCollectionResource::collection($employees);
+    }
+
+    /**
+     * Export employees to csv
+    */
+
+    public function ExportEmployees(){
+       
+        $employees = Employee::all();
+    
+        $filename = "employees.csv";
+        $handle = fopen($filename, 'w');
+        foreach ($employees as $employee) {
+        $line = [
+                $employee->name, $employee->email, $employee->age, $employee->hired_date, $employee->salary, $employee->gender, $employee->job_id, $employee->manager_id
+            ];
+            fputcsv($handle, $line);
+        }
+
+        fclose($handle);
+
+        return response()->download($filename)->deleteFileAfterSend();
+    }
+
+    /**
+     * Import employees from csv
+    */
+
+    public function ImportEmployees(Request $request){
+        try{
+            if(!$request->hasFile('file') || $request->file('file')->getClientOriginalExtension() != 'csv'){
+                return $this->errorResponse('Please upload a csv file', 400);
+            }
+            $path = $request->file('file')->getRealPath();
+            $data = array_map('str_getcsv', file($path));
+
+            ImportEmployeesJob::dispatch($data);
+
+            return $this->successResponse('Employees data has been queued for processing.', 200);
+        }
+        catch(\ErrorException $e){
             return $this->errorResponse('Something went wrong: ' .$e->getMessage(), 500);
         }
     }
