@@ -30,7 +30,7 @@ class EmployeeTest extends TestCase
 
     public function create_employee_job(){
         $job = Jobs::Create([
-            'name' => $this->faker->jobTitle,
+            'name' => $this->faker->unique()->jobTitle,
         ]);
         return $job;
     }
