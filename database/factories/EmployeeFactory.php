@@ -41,7 +41,7 @@ class EmployeeFactory extends Factory
            }
         else
         {
-            $employee->manager_id = Employee::inRandomOrder()->first()->id;
+            $employee->manager_id = Employee::inRandomOrder()->where('id', '!=', $employee->id)->first()->id;
             $employee->save();
         }
         });
