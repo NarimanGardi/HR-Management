@@ -18,24 +18,36 @@ HR Management API is a RESTful web service that provides       functionality for
 	```
     
 * Install the dependencies: 
-```composer install```
+    ```
+    composer install
+    ```
     
 * Create a new `.env` file by copying the `.env.example` file: 
- ```cp .env.example .env```
+    ```
+    cp .env.example .env
+    ```
     
 *  Update the `DB_` variables in the `.env` file with your database credentials.
     
 * Generate a new application key: 
-```php artisan key:generate```
+    ```
+    php artisan key:generate
+    ```
 
 * Link storage folder to public: 
-```php artisan storage:link```
+    ```
+    php artisan storage:link
+    ```
     
 *  Migrate the database: 
-```php artisan migrate```
+    ```
+    php artisan migrate --seed
+    ```
     
 *  Serve the application: 
-```php artisan serve```
+    ```
+    php artisan serve
+    ```
     
 
 ## Deploy Project with Nginx
