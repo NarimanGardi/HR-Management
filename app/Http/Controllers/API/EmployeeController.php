@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Events\SalaryChanged;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Employee\StoreEmployeeRequest;
 use App\Http\Requests\API\Employee\UpdateEmployeeRequest;
@@ -13,7 +12,7 @@ use App\Models\Employee;
 use App\Notifications\SalaryChangedNotification;
 use Illuminate\Http\Request;
 use App\Traits\HttpResponses;
-use Illuminate\Support\Facades\Response;
+use Illuminate\Database\QueryException;
 
 class EmployeeController extends Controller
 {
@@ -58,6 +57,10 @@ class EmployeeController extends Controller
             return $this->errorResponse('manager_id cant be null, There is already a founder', 400);
         }
 
+        if ($request->manager_id == $employee->id) {
+            return $this->errorResponse('employees cant be their own manager', 400);
+        }
+
         $employee->update($request->validated());
 
         if ($employee->wasChanged('salary')) {
@@ -72,8 +75,13 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
-        $employee->destroy($employee->id);
-        return response(null, 204);
+        try{
+            $employee->destroy($employee->id);
+            return response(null, 204);
+        }
+        catch(QueryException $e){
+            return $this->errorResponse('Cant delete an employee who is a manager of another employee', 500);
+        }
     }
 
     /**
@@ -91,7 +99,7 @@ class EmployeeController extends Controller
             return $managers->reverse();
         }
         catch(\Exception $e){
-            return $this->errorResponse('Something went wrong: ' .$e->getMessage(), 500);
+            return $this->errorResponse('Something went wrong ', 400);
         }
     }
 
