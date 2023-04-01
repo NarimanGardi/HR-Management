@@ -219,8 +219,15 @@ class EmployeeTest extends TestCase
             return Employee::factory()->create();
         });
 
-        $employee = Employee::withoutEvents(function () use ($manager) {
-            return Employee::factory()->create([
+        $employee = Employee::withoutEvents(function () use ($manager, $job) {
+            return Employee::create([
+                'name' => 'Jane Doe',
+                'email' => $this->faker->unique()->safeEmail,
+                'age' => 35,
+                'hired_date' => '2022-04-01',
+                'gender' => 2,
+                'salary' => 1500,
+                'job_id' => $job->id,
                 'manager_id' => $manager->id
             ]);
         });
