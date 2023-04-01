@@ -23,16 +23,16 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         return $request->user();
     });
     Route::resource('jobs', JobsController::class)->except(['create', 'edit']);
-    Route::get('/employees/{id}/managers', [EmployeeController::class, 'getManagers']);
+    Route::get('/employees/{id}/managers', [EmployeeController::class, 'getManagers'])->name('api.employees.managers');
     Route::get('/employees/{id}/managers-salary', [EmployeeController::class, 'getManagerSalary']);
-    Route::get('/employees/search', [EmployeeController::class, 'SearchEmployees']);
+    Route::get('/employees/search', [EmployeeController::class, 'SearchEmployees'])->name('api.employees.search');
     Route::get('/employees/export', [EmployeeController::class, 'ExportEmployees']);
     Route::post('/employees/import', [EmployeeController::class, 'ImportEmployees']);
     Route::resource('employees', EmployeeController::class)->except(['create', 'edit']);
-    Route::get('/{date}/logs', [EmployeeLogController::class, 'getLogs']);
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/{date}/logs', [EmployeeLogController::class, 'getLogs'])->name('api.employees.logs');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
 });
 
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login'])->name('api.login');
+Route::post('/register', [AuthController::class, 'register'])->name('api.register');
 
