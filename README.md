@@ -1,66 +1,108 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# HR Management API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Description
 
-## About Laravel
+HR Management API is a RESTful web service that provides       functionality for managing employee data in an organization. The API supports CRUD (Create, Read, Update, Delete) operations for       employees, as well as authentication and authorization via JSON Web  Tokens (JWTs). Other features include searching for employees by     name, exporting all employee data to a CSV file, importing employee  data from a CSV file, and retrieving logs of actions taken on       employee data. The API is designed to be consumed by client       applications that need to integrate employee management functionality    into their workflow.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Dependencies
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+-   PHP >= 8.1
+-   Laravel/Framework: ^10.0
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Installation
 
-## Learning Laravel
+*  Clone the repository: 
+    ```
+	git init
+	git clone https://github.com/NarimanGardi/HR-Management-API
+	```
+    
+* Install the dependencies: 
+    ```
+    composer install
+    ```
+    
+* Create a new `.env` file by copying the `.env.example` file: 
+    ```
+    cp .env.example .env
+    ```
+    
+*  Update the `DB_` variables in the `.env` file with your database credentials.
+    
+* Generate a new application key: 
+    ```
+    php artisan key:generate
+    ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* Link storage folder to public: 
+    ```
+    php artisan storage:link
+    ```
+    
+*  Migrate the database: 
+    ```
+    php artisan migrate --seed
+    ```
+    
+*  Serve the application: 
+    ```
+    php artisan serve
+    ```
+    
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Deploy Project with Nginx
+*  Set up a server: you can use any cloud service provider such as Amazon Web Services, DigitalOcean, or Google Cloud Platform.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+* Install Nginx.
+```
+sudo apt-get  update
+sudo apt-get install nginx
+```
 
-## Laravel Sponsors
+* Configure Nginx. Open the Nginx configuration file located at `/etc/nginx/sites-available/default` and modify it as follows:
+```php
+server { 
+		listen 80; 
+		server_name example.com; 
+		root /var/www/html/example.com/public; 
+		
+		index index.html index.htm index.php;
+		
+		location / { 
+			try_files $uri  $uri/ /index.php?$query_string; 
+		}
+		
+		location ~ \.php$ {
+			include fastcgi_params; 
+			fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			fastcgi_param PATH_INFO $fastcgi_path_info;
+		} 
+}
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+* Install TLS certificate:
+```sql
+sudo apt-get install certbot python3-certbot-nginx 
+sudo certbot --nginx -d example.com -d www.example.com
+```
 
-### Premium Partners
+* Restart Nginx:
+```sql
+sudo systemctl restart nginx
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+Your Laravel application is now deployed with Nginx and TLS. You can access it by visiting your domain name in a web browser.
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## API Documentation
 
-## Code of Conduct
+You can find the documentation for our API [here](https://documenter.getpostman.com/view/22853456/2s93RUvXa8). The documentation provides detailed information on how to use each endpoint, as well as examples of request and response payloads.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Unit Testing
 
-## Security Vulnerabilities
+To run the tests, open a terminal window in the root directory of the project and enter the following command:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+`php artisan test` 
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This will execute all of the tests in the `/tests/Feature` directory and generate a report of the results. If any tests fail, the report will indicate which tests failed and provide details on the nature of the failure.

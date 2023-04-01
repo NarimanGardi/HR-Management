@@ -9,6 +9,7 @@ use App\Http\Resources\API\Employee\EmployeeCollectionResource;
 use App\Http\Resources\API\Employee\EmployeeResource;
 use App\Jobs\ImportEmployeesJob;
 use App\Models\Employee;
+use App\Models\Jobs;
 use App\Notifications\SalaryChangedNotification;
 use Illuminate\Http\Request;
 use App\Traits\HttpResponses;
@@ -169,6 +170,40 @@ class EmployeeController extends Controller
             }
             $path = $request->file('file')->getRealPath();
             $data = array_map('str_getcsv', file($path));
+            $founder = false;
+            foreach ($data as $employee) {
+                // check if employee already exists
+                if (Employee::where('email', $employee[1])->exists()) {
+                    return $this->errorResponse('Employee with email: ' . $employee[1] . ' already exists', 400);
+                }
+
+                // check if manager_id exists
+                if ($employee[7] != null && !Employee::where('id', $employee[7])->exists()) {
+                    return $this->errorResponse('Manager with id: ' . $employee[7] . ' does not exist', 400);
+                }
+
+                // if manager_id is null, check if there is already a founder
+                if ($employee[7] == null) {
+                    $checkFounderExists = Employee::where('manager_id', null)->first();
+                    if ($checkFounderExists) {
+                        return $this->errorResponse('manager_id cant be null, There is already a founder', 400);
+                    }
+                    if($founder){
+                        return $this->errorResponse('There can only be one founder', 400);
+                    }
+                    $founder = true;
+                }
+
+                // check if job_id exists
+                if (!Jobs::where('id', $employee[6])->exists()) {
+                    return $this->errorResponse('Job with id: ' . $employee[6] . ' does not exist', 400);
+                }
+
+                // check if gender is only 1 or 2
+                if($employee[4] != 1 && $employee[4] != 2){
+                    return $this->errorResponse('Gender must be 1 or 2: ' . $employee[4] . ' is not valid for employee ' . $employee[0] , 400);
+                }
+            }
 
             ImportEmployeesJob::dispatch($data);
 
