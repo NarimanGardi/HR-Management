@@ -22,7 +22,7 @@ class UpdateJobRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255' , 'unique:employee_jobs,name,' . $this->id],
+            'name' => ['required', 'string', 'max:255' , 'unique:employee_jobs,name,' . $this->job->id],
         ];
     }
 }

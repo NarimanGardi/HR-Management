@@ -8,6 +8,7 @@ use App\Http\Requests\API\Job\UpdateJobRequest;
 use App\Http\Resources\Jobs\JobResource;
 use App\Models\Jobs;
 use App\Traits\HttpResponses;
+use Illuminate\Database\QueryException;
 
 class JobsController extends Controller
 {
@@ -55,7 +56,12 @@ class JobsController extends Controller
      */
     public function destroy(Jobs $job)
     {
-        $job->destroy($job->id);
-        return response(null, 204);
+        try{
+            $job->destroy($job->id);
+            return response(null, 204);
+        }
+        catch(QueryException $e){
+            return $this->errorResponse('Cant delete a job that has one or more employees', 500);
+        }
     }
 }
