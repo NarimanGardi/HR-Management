@@ -170,7 +170,7 @@ class EmployeeController extends Controller
             }
             $path = $request->file('file')->getRealPath();
             $data = array_map('str_getcsv', file($path));
-
+            $founder = false;
             foreach ($data as $employee) {
                 // check if employee already exists
                 if (Employee::where('email', $employee[1])->exists()) {
@@ -188,6 +188,10 @@ class EmployeeController extends Controller
                     if ($checkFounderExists) {
                         return $this->errorResponse('manager_id cant be null, There is already a founder', 400);
                     }
+                    if($founder){
+                        return $this->errorResponse('There can only be one founder', 400);
+                    }
+                    $founder = true;
                 }
 
                 // check if job_id exists
