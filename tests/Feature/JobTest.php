@@ -14,7 +14,7 @@ class JobTest extends TestCase
     use WithFaker;
     public function create_job(){
         $job = Jobs::Create([
-            'name' => $this->faker->jobTitle,
+            'name' => $this->faker->unique()->jobTitle,
         ]);
         return $job;
     }
@@ -78,7 +78,7 @@ class JobTest extends TestCase
 
         // Define the job data
         $data = [
-            'name' => $this->faker->jobTitle,
+            'name' => $this->faker->unique()->jobTitle,
         ];
 
         $response = $this->actingAs($user)->postJson(route('jobs.store'), $data);
@@ -96,7 +96,7 @@ class JobTest extends TestCase
 
         // Define the job data
         $data = [
-            'name' => $this->faker->jobTitle,
+            'name' => $this->faker->unique()->jobTitle,
         ];
 
         $response = $this->actingAs($user)->postJson(route('jobs.store'), $data);
@@ -144,7 +144,7 @@ class JobTest extends TestCase
         $job = $this->create_job();
 
         $data = [
-            'name' => $this->faker->jobTitle,
+            'name' => $this->faker->unique()->jobTitle,
         ];
 
         $response = $this->actingAs($user)->putJson(route('jobs.update', $job->id), $data);
