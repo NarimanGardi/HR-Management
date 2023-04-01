@@ -59,7 +59,12 @@ class EmployeeController extends Controller
         }
 
         if ($request->manager_id == $employee->id) {
-            return $this->errorResponse('employees cant be their own manager', 400);
+            return $this->errorResponse('employee cant be their own manager', 400);
+        }
+
+        $manager = Employee::find($request->manager_id);
+        if ($manager && $manager->manager_id == $employee->id) {
+            return $this->errorResponse('two employee cant be managers of each other', 400);
         }
 
         $employee->update($request->validated());
