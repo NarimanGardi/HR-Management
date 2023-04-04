@@ -95,18 +95,7 @@ class EmployeeController extends Controller
      */
 
     public function getManagers($id){
-        try{
-            $employee = Employee::with('manager')->find($id);
-            $managers = collect([$employee->name]);
-            while (!$employee->isFounder()) {
-                $managers->push($employee->manager->name);
-                $employee = $employee->manager;
-            }
-            return $managers->reverse();
-        }
-        catch(\Exception $e){
-            return $this->errorResponse('Something went wrong ', 400);
-        }
+            return $this->MangaersData($id);
     }
 
     /**
@@ -114,22 +103,7 @@ class EmployeeController extends Controller
      */
 
      public function getManagerSalary($id){
-        try{
-            $employee = Employee::with('manager')->find($id);
-            $managers = collect([$employee]);
-            while (!$employee->isFounder()) {
-                $managers->push($employee->manager);
-                $employee = $employee->manager;
-            }
-            $result = [];
-            foreach ($managers->reverse() as $manager) {
-                $result[$manager->name] = $manager->salary;
-            }
-            return $result;
-        }
-        catch(\Exception $e){
-            return $this->errorResponse('Something went wrong: ' .$e->getMessage(), 500);
-        }
+        return $this->MangaersData($id, 'salary');
      }
 
     /**
@@ -217,5 +191,26 @@ class EmployeeController extends Controller
         catch(\ErrorException $e){
             return $this->errorResponse('Something went wrong: ' .$e->getMessage(), 500);
         }
+    }
+
+    public function MangaersData($id, $type = null){
+        $employee = Employee::with('manager')->find($id);
+        $managers = collect([$employee]);
+        while (!$employee->isFounder()) {
+            $managers->push($employee->manager);
+            $employee = $employee->manager;
+        }
+        $result = [];
+        if($type == 'salary'){
+            foreach ($managers->reverse() as $manager) {
+                $result[$manager->name] = $manager->salary;
+            }
+        }
+        else{
+            foreach ($managers->reverse() as $manager) {
+                $result[] = $manager->name;
+            }
+        }
+        return $result;
     }
 }
