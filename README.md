@@ -16,7 +16,10 @@ HR Management API is a RESTful web service that provides       functionality for
 	git init
 	git clone https://github.com/NarimanGardi/HR-Management-API
 	```
-    
+* Change into the project directory: 
+    ```
+    cd HR-Management-API
+    ```
 * Install the dependencies: 
     ```
     composer install
