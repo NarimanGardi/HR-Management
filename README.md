@@ -16,6 +16,11 @@ HR Management API is a RESTful web service that provides       functionality for
 	git init
 	git clone https://github.com/NarimanGardi/HR-Management-API
 	```
+* Change into the project directory:
+
+```
+cd HR-Management-API
+```
     
 * Install the dependencies: 
     ```
@@ -101,8 +106,24 @@ You can find the documentation for our API [here](https://documenter.getpostman.
 
 ## Unit Testing
 
-To run the tests, open a terminal window in the root directory of the project and enter the following command:
+* Create new database and configure it in `.env` file
+```
+DB_HOST_TESTING=127.0.0.1
+DB_PORT_TESTING=3306
+DB_DATABASE_TESTING=your_testing_db_name
+DB_USERNAME_TESTING=your_testing_db_username
+DB_PASSWORD_TESTING=your_testing_db_password
+```
 
-`php artisan test` 
+* Run Migration For the test database
+```
+php artisan migrate --database=testing
+```
+
+* Run the Test
+
+```
+php artisan test
+```
 
 This will execute all of the tests in the `/tests/Feature` directory and generate a report of the results. If any tests fail, the report will indicate which tests failed and provide details on the nature of the failure.
